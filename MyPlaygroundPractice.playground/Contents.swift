@@ -13,7 +13,7 @@ print("_________________")
 print("")
 
 
-/// MARK: 2.Question (Sort an array of names in reverse order using a trailing closure and use an auto closure to  remove elements from the list)
+///// MARK: 2.Question (Sort an array of names in reverse order using a trailing closure and use an auto closure to  remove elements from the list)
 print("2.Question Ans:")
 var names = ["Alice", "Bob", "Charlie", "David", "Eve"]
 print("Original Array:")
@@ -29,7 +29,34 @@ let newArr = names.sorted(by: >)
 print("Reversed by using sorted function:")
 print(newArr)
 print("_________________")
-print("")
+print("Print Duplicate numbers and their frequency")
+
+let inputs = [2, 3, 4, 5, 4, 6, 4, 7, 4, 5, 6, 6]
+// Using the given line to find duplicates
+let duplicateNumbers = Array(Set(inputs.filter { input in
+    inputs.filter { $0 == input }.count > 1
+}))
+print("Duplicate Numbers: ",duplicateNumbers)
+
+// Dictionary to store frequency of each element
+var frequencyDict = [Int: Int]()
+
+// Calculating frequency
+for input in inputs {
+    if duplicateNumbers.contains(input) {
+        if let count = frequencyDict[input] {
+            frequencyDict[input] = count + 1
+        } else {
+            frequencyDict[input] = 1
+        }
+    }
+}
+
+print("Frequency of duplicates:")
+// Printing frequency of each duplicate element
+for (element, frequency) in frequencyDict {
+    print("Element \(element) occurs \(frequency) times")
+}
 
 // Removing elements from the array using an autoclosure
 func removeElement(from array: inout [String], condition: @autoclosure () -> Bool) {
@@ -180,7 +207,6 @@ struct employeeArrModel {
     }
 }
 
-
 enum sampleEnum: Int {
     case monday = 1
     case tuesday = 2
@@ -189,7 +215,9 @@ enum sampleEnum: Int {
 print("_________________")
 print("")
 
-// MARK : 8 (Main thread syntax)
+// MARK : In Grand Central Dispatch (GCD), there are two main types of concurrent queues: normal concurrent queues created explicitly by the developer and global concurrent queues provided by the system.
+
+// (Main thread syntax)
 print("Main thread syntax")
 DispatchQueue.main.async {
     print("This is main thread")
@@ -200,28 +228,46 @@ DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
 }
 
 print("_________________")
-print("")
+print("Queues")
 /// MARK :  (Queues)
 
-let queue = DispatchQueue(label: "Test Queue")
-
-queue.sync {
-    for i in 0..<10 {
-        print(i)
-    }
+// Serial Queues
+let serialQueue = DispatchQueue(label: "com.serialQueue.test") // Serial Queue declaration
+serialQueue.sync {
+//    for i in 0..<10 {
+//        print(i)
+//    }
+    print("When you add a task to a serial queue using the sync method, the calling thread waits until the task finishes executing before continuing.Synchronous tasks execute one after another in the order they are added to the queue. Adding tasks synchronously to a serial queue doesn't create a deadlock because the tasks execute sequentially on the same queue.")
 }
-
 print("_________________")
 print("")
+serialQueue.async {
+    print("When you add a task to a serial queue using the async method, the calling thread continues its execution without waiting for the task to complete.Asynchronous tasks can execute concurrently with other tasks in the queue or on different queues. Tasks added asynchronously to a serial queue maintain their sequential order of execution, but they don't block the calling thread.")
+}
 
-queue.async {
-    for i in 100..<110{
-        print(i)
-    }
+// Normal concurrent queues
+let normalConcurrentQueue = DispatchQueue(label: "com.normalConcurrentQueue.test", attributes: .concurrent)
+normalConcurrentQueue.sync {
+    print("When you add a task to a concurrent queue using the sync method, the calling thread waits until the task finishes executing before continuing.However, since it's a concurrent queue, tasks added synchronously don't necessarily execute concurrently; they may still run serially, one after the other.")
+}
+normalConcurrentQueue.sync {
+print("In this example, both tasks execute sequentially because they are added synchronously to the concurrent queue. However, they could potentially execute concurrently if there were multiple threads available.")
+}
+
+normalConcurrentQueue.async {
+    print("When you add a task to a concurrent queue using the async method, the calling thread continues without waiting for the task to complete.Asynchronous tasks execute concurrently with other tasks in the queue or on different queues.")
+}
+normalConcurrentQueue.async {
+    print("In this example, both tasks are added asynchronously to the concurrent queue. They can execute concurrently on different threads, leading to non-deterministic order of execution")
+}
+
+// Global Concurrent Queues(Background thread)
+DispatchQueue.global(qos: .background).sync {
+    print("When you add a task to a global concurrent queue using the sync method, the calling thread waits until the task finishes executing before continuing.Synchronous tasks execute one after another in the order they are added to the queue but may run concurrently with tasks from other queues")
 }
 
 DispatchQueue.global(qos: .background).async {
-    print("Hi")
+    print("When you add a task to a global concurrent queue using the async method, the calling thread continues without waiting for the task to complete.Asynchronous tasks execute concurrently with other tasks in the queue or on different queues.")
 }
 
 // NSOperational Queues
@@ -335,6 +381,7 @@ print("INTERVIEW - 6")
 // 9.Example for retain cycle happens
 // 10.Deep Explore about MVC and MVVM (Advantages and disadvantages)
 // 11.How to perform network calls
+// Higher order functions with examples
 
 let totalStr = "Ravi1234Krishna"
 var count = 0
@@ -373,7 +420,7 @@ class Car {
     init(model:String){
         self.carModel = model
     }
-    
+
    weak var owner: Person? // if weak remove here, deinit not getting called in both classes
     deinit {
         print("\(carModel) is being deinitialized")
@@ -394,3 +441,110 @@ personObj?.car = carObj
 // Setting references to nil to break the retain cycle
 personObj = nil
 carObj = nil
+
+
+print("_________________")
+print("CYIENT")
+
+var thing = "cars"
+
+let closure = { [thing] in
+print("I love \(thing)")
+} //(O/p: I love cars)
+//(NOTE: let closure = { [thing] in print("I love \(thing)") }: You define a closure that captures the current value of thing (which is "cars") and prints it when called.)
+
+//let closure = { in
+//print("I love \(thing)")
+//} /(O/p: I love airplanes)
+//(NOTE: let closure = { print("I love \(thing)") }: You define a closure that captures thing by reference (implicitly), meaning it will use the latest value of thing when executed.)
+
+thing = "airplanes"
+closure() // Calling closure
+
+
+
+print("_________________")
+print("NetworkCall")
+
+// Define the URL for the request
+let urlString = "https://api.example.com/data"
+
+// Create a URL object from the string
+if let url = URL(string: urlString) {
+    // Create a URLSession instance
+    let session = URLSession.shared
+
+    // Create a data task with the URL
+    let task = session.dataTask(with: url) { (data, response, error) in
+        // Check for errors
+        if let error = error {
+            print("Error: \(error)")
+            return
+        }
+
+        // Check for successful response
+        guard let httpResponse = response as? HTTPURLResponse,
+              (200...299).contains(httpResponse.statusCode) else {
+            print("Server Error")
+            return
+        }
+
+        // Check if data is available
+        if let data = data {
+            // Parse the data if needed
+            // For example, you can decode JSON data using JSONDecoder
+            do {
+                let json = try JSONSerialization.jsonObject(with: data, options: [])
+                print("Response JSON: \(json)")
+            } catch {
+                print("Error parsing JSON: \(error)")
+            }
+        } else {
+            print("No data received")
+        }
+    }
+
+    // Start the data task
+    task.resume()
+} else {
+    print("Invalid URL")
+}
+
+
+
+
+
+//let serialQueue = DispatchQueue(label: "com.serialQueue.example")
+////serialQueue.sync {
+////    print("Serial-Q1")
+////    print("Serial-Q2")
+////    print("Serial-Q3")
+////    print("Serial-Q4")
+////}
+//serialQueue.async {
+////    print("Serial With Async-Q1")
+////    print("Serial With Async-Q2")
+////    print("Serial With Async-Q3")
+////    print("Serial With Async-Q4")
+//
+//    for i in 0...500 {
+//        print(i)
+//    }
+//}
+//
+//serialQueue.async {
+//    for r in 2000...2100 {
+//        print(r)
+//    }
+//}
+//let serialQueue = DispatchQueue(label: "com.example.serialQueue")
+//
+//serialQueue.async {
+//    print("Task 1")
+//}
+//
+//serialQueue.async {
+//    print("Task 2")
+//}
+//
+//print("End")
