@@ -510,6 +510,23 @@ if let url = URL(string: urlString) {
     print("Invalid URL")
 }
 
+class Square {
+    var side: Double = 0
+    var area: Double {
+        get{
+            return side * side
+        }
+        set{
+            side = newValue.squareRoot()
+        }
+    }
+}
+let squareObj = Square()
+squareObj.side = 10
+print(squareObj.area)
+squareObj.area = 25
+print(squareObj.side)
+
 
 
 
@@ -548,3 +565,4 @@ if let url = URL(string: urlString) {
 //}
 //
 //print("End")
+
